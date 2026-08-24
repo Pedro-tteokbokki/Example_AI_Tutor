@@ -1,0 +1,92 @@
+1. terminal setting
+- windows :  using PowerShell (window+R => powershell) // Git Bash
+- terminal setting in vscode
+   1) vscode :  ctrl + shift + p
+   2) search "terminal"
+   3) Terminal › Integrated › Default Profile: Windows  :  Git Bash
+- open vscode in Git Bash
+   * (terminal) code.cmd .
+
+
+2. virtual environment configuration
+- terminal
+   1) conda create -n myenv python=3.11
+   2) conda activate myenv
+   3) conda install numpy pandas
+   4) conda deactivate
+
+
+3. get my openai API key from https://platform.openai.com/api-keys
+
+
+4. set environment variable with my API key
+- terminal
+   1) echo 'export OPENAI_API_KEY="sk-..."' >> ~/.bashrc
+   2) source ~/.bashrc
+(or)
+   setx OPENAI_API_KEY "sk-..."
+
+
+5. enabling Korean in jupyter lab
+- terminal
+echo 'export LANG=en_US.UTF-8' >> ~/.bashrc
+echo 'export LC_ALL=en_US.UTF-8' >> ~/.bashrc
+export PYTHONUTF8=1
+locale
+jupyter lab
+
+- jupyter lab
+import sys, locale
+print("stdout:", sys.stdout.encoding)
+print("preferred:", locale.getpreferredencoding(False))
+
+
+6. how to use streamlit:  making web ui with python code
+pip install streamlit
+streamlit run test_streamlit.py
+
+
+7. using fastapi
+(terminal)
+pip install fastapi
+pip install "uvicorn[standard]"
+
+(main.py)
+from fastapi import FastAPI
+app = FastAPI()
+@app.get("/helloworld")
+def get_helloworld():
+	return "hello world"
+
+(terminal) 
+uvicorn main:app --reload
+python -m uvicorn main:app --reload --port 8000
+
+(web)
+http://127.0.0.1:8000/helloworld
+http://127.0.0.1:8000/docs
+
+
+8. My server using AWS EC2
+aws.amazon.com -> console login (root user) -> console home: EC2 -> instance -> start instance -> OS image: Ubuntu -> Instance type: t2.micro -> key pair: creating new key pair -> key pair name/type (RSA)/.pem -> creating key pair -> start instance (right bottom) -> check public DNS
+(terminal) ssh -i "myaitutor.pem" ubuntu@DNS  (connecting to Ubuntu) (authority change:  chmod 0400 myaitutor.pem)
+
+
+9. Upload source code to GitHub
+1) installing git:  https://git-scm.com/install/windows
+2) creating ssh keygen:  terminal) ssh-keygen  ->  enter  ->  cat ~/.ssh/id_ed25519.pub  ->  copy
+3) enrolling ssh key to GitHub:  GitHub  ->  Settings  ->  SSH and GPG keys  ->  New SSH key  ->  paste & Add SSH key
+4) uploading code to GitHub:  New Repository  ->  Example_AI_Tutor  ->  Create Repository  ->  terminal) move to the code directory  ->  rm -rf .git  ->  git init  ->  git add .  ->  git add -f charts data imgs  ->  git status  ->  git config --local user.name "my_name" // user.email "my_email"  ->  git commit -m "first commit"  ->  git remote add origin https://github.com/Pedro-tteokbokki/example_codes.git  ->  git push -u origin main  ->  refresh GitHub
+
+
+10. 
+
+
+
+
+
+
+
+
+
+

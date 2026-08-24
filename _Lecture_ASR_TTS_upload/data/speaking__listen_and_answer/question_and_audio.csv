@@ -1,0 +1,5 @@
+question,audio_file_path
+Who are you closest to in your family?,./data/speaking__listen_and_answer/question_0.wav
+"What subject do you enjoy most at school, and why?",./data/speaking__listen_and_answer/question_1.wav
+How do you usually spend time with your friends?,./data/speaking__listen_and_answer/question_2.wav
+"What hobby would you recommend to me, and why?",./data/speaking__listen_and_answer/question_3.wav
