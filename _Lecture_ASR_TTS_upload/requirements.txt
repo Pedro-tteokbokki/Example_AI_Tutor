@@ -1,4 +1,5 @@
 openai==1.7.2
+httpx==0.27.2
 jupyterlab==4.0.9
 kor==1.0.0
 matplotlib==3.8.2
@@ -18,8 +19,8 @@ tenacity==8.2.3
 tiktoken==0.5.2
 tqdm==4.66.1
 datasets==2.16.1
-langchain==0.1.0
-langchain-community==0.0.9
+langchain==0.0.354
+langchain-community==0.0.8
 langchain-core==0.1.7
 langchain-experimental==0.0.47
 langchain-openai==0.0.2.post1
