@@ -78,7 +78,7 @@ WRITING_EXAM_CONFIGS = {
 
 
 def generate_writing_context(prompt: str) -> str:
-    model = ChatOpenAI(model="gpt-5.6-luna")
+    model = ChatOpenAI(model="gpt-5.6-luna", http_socket_options=())
     return model.invoke(prompt).content
 
 
@@ -98,7 +98,7 @@ def evaluate_writing_answer(instruction: str, context: str, user_answer: str):
         partial_variables={"format_instructions": format_instructions},
     )
     prompt = ChatPromptTemplate.from_messages([human_prompt_template])
-    model = ChatOpenAI(model="gpt-5.6-luna")
+    model = ChatOpenAI(model="gpt-5.6-luna", http_socket_options=())
     return (prompt | model | parser).invoke(
         {"instruction": instruction, "context": context, "input": user_answer}
     )
@@ -256,7 +256,7 @@ elif st.session_state["curr_page"] == "speaking__listen_and_answer":
                 
 
             def get_speaking__listen_and_answer_result(answer_text):
-                model = ChatOpenAI(model="gpt-5.6-luna")
+                model = ChatOpenAI(model="gpt-5.6-luna", http_socket_options=())
                 class Score(BaseModel):
                     reason: str = Field(description="Question에 대해 Your Answer가 적절한지에 대해 추론하라. 한국어로.")
                     score: int = Field(description="Question에 대해 Your Answer가 적절한지에 대해 0~10점 사이의 점수를 부여하라")
@@ -346,7 +346,7 @@ elif st.session_state["curr_page"] == "speaking__express_an_opinion":
                 
             with st.container(border=True):
                 def get_speaking__express_opinion_result(answer_text):
-                    model = ChatOpenAI(model="gpt-5.6-luna")
+                    model = ChatOpenAI(model="gpt-5.6-luna", http_socket_options=())
                     class Score(BaseModel):
                         reason: str = Field(description="Question에 대해 의견을 말하는 시험이다. 의견을 적절히 구조적으로 응답했는지 추론하라. 한국어로.")
                         score: int = Field(description="Question에 대해 Your Answer가 충분히 논리적으로 의견을 표현했는지에 대해 0~10점 사이의 점수를 부여하라.")
@@ -391,7 +391,9 @@ elif st.session_state["curr_page"] == "speaking__debate":
     user_input = ""
 
     if "model" not in st.session_state.exam_context:
-        st.session_state.exam_context["model"] = ChatOpenAI(model="gpt-5.6-luna")
+        st.session_state.exam_context["model"] = ChatOpenAI(
+            model="gpt-5.6-luna", http_socket_options=()
+        )
 
     if "messages" not in st.session_state.exam_context:
         system_prompt = """\
@@ -462,7 +464,7 @@ elif st.session_state["curr_page"] == "speaking__debate":
         if turn_len >= max_turn_len:
 
             def get_speaking__debate_result(conversation):
-                model = ChatOpenAI(model="gpt-5.6-luna")
+                model = ChatOpenAI(model="gpt-5.6-luna", http_socket_options=())
                 class Score(BaseModel):
                     reason: str = Field(description="주어진 대화에 대해 User가 얼마나 논리적이고 유창하게 영어로 응답하였는지 추론하라. 한국어로.")
                     score: int = Field(description="주어진 대화에서 User의 응답에 대해 유창성과 논리성을 고려하여 0~10점 사이의 점수를 부여하라.")
@@ -549,7 +551,9 @@ elif  st.session_state["curr_page"] == "speaking__describe_img":
 
     if submit:
         def get_speaking__describe_img(user_input, ref):
-            model = ChatOpenAI(model="gpt-5.6-luna", temperature=0.8) # CoT 는 다양한 샘플을 만들어야하기 때문에 temperature를 올려야함
+            model = ChatOpenAI(
+                model="gpt-5.6-luna", temperature=0.8, http_socket_options=()
+            ) # CoT 는 다양한 샘플을 만들어야하기 때문에 temperature를 올려야함
             class Evaluation(BaseModel):
                 score: int = Field(description="사진 묘사하기 표현 표현 점수. 0~10점")
                 feedback: str = Field(description="사진 묘사하기를 더 잘 할 수 있도록하는 자세한 피드백. Markdown형식, 한국어로.")
@@ -630,7 +634,9 @@ elif  st.session_state["curr_page"] == "speaking__describe_charts":
 
     if submit:
         def get_speaking__describe_img(user_input, ref):
-            model = ChatOpenAI(model="gpt-5.6-luna", temperature=0.8) # CoT 는 다양한 샘플을 만들어야하기 때문에 temperature를 올려야함
+            model = ChatOpenAI(
+                model="gpt-5.6-luna", temperature=0.8, http_socket_options=()
+            ) # CoT 는 다양한 샘플을 만들어야하기 때문에 temperature를 올려야함
             class Evaluation(BaseModel):
                 score: int = Field(description="도표 보고 발표하기 점수. 0~10점")
                 feedback: str = Field(description="도표 보고 발표하기 점수. Markdown형식, 한국어로.")
