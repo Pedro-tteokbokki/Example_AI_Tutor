@@ -76,17 +76,65 @@ aws.amazon.com -> console login (root user) -> console home: EC2 -> instance -> 
 1) installing git:  https://git-scm.com/install/windows
 2) creating ssh keygen:  terminal) ssh-keygen  ->  enter  ->  cat ~/.ssh/id_ed25519.pub  ->  copy
 3) enrolling ssh key to GitHub:  GitHub  ->  Settings  ->  SSH and GPG keys  ->  New SSH key  ->  paste & Add SSH key
-4) uploading code to GitHub:  New Repository  ->  Example_AI_Tutor  ->  Create Repository  ->  terminal) move to the code directory  ->  rm -rf .git  ->  git init  ->  git add .  ->  git add -f charts data imgs  ->  git status  ->  git config --local user.name "my_name" // user.email "my_email"  ->  git commit -m "first commit"  ->  git remote add origin https://github.com/Pedro-tteokbokki/example_codes.git  ->  git push -u origin main  ->  refresh GitHub
+4) uploading code to GitHub:  New Repository  ->  Example_AI_Tutor  ->  Create Repository  ->  terminal) move to the code directory  ->  rm -rf .git  ->  git init  ->  git add .  ->  git add -f charts data imgs  ->  git status  ->  git config --local user.name "my_name" // user.email "my_email"  ->  git commit -m "first commit"  ->  git remote add origin https://github.com/~~.git  ->  git push -u origin main  ->  refresh GitHub
 
 
-10. 
+10. Access to Ubuntu & Connecting to AWS service
+1) (terminal) access to Ubuntu (*.pem location):  ssh -i "myaitutor.pem" ubuntu@ec2-3-34-179-151.ap-northeast-2.compute.amazonaws.com
+2) (Ubuntu) ssh-keygen -> cat ~/.ssh/id_ed25519.pub -> copy -> (GitHub) Settings -> SSH and GPG keys -> New SSH key -> paste & Add SSH key
+3) (Ubuntu) git clone git@github.com:Pedro-tteokbokki/Example_AI_Tutor.git
 
 
+11. Install miniconda to Ubuntu (https://www.anaconda.com/docs/getting-started/miniconda/install/linux-install)
+1) mkdir -p ~/miniconda3
+2) wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+3) bash Miniconda3-latest-Linux-x86_64.sh -b -u -p ~/miniconda3/
+4) rm -rf Miniconda3-latest-Linux-x86_64.sh
+5) ~/miniconda3/bin/conda init bash
+6) ubuntu exit & reconnect
 
 
+12. Install requirements.txt
+pip install -r requirements.txt
+conda create -n ai-tutor python=3.10 pip -y
+conda activate ai-tutor
+python -m pip install --upgrade pip setuptools wheel
+python -m pip install -r requirements.txt
 
 
+13. openai API key to Ubuntu:  
+vim ~/.bashrc
+(insert) export OPENAI_API_KEY="~~"
 
 
+14. Execute speaking_exam.py
+1) (Ubuntu) streamlit run speaking_exam.py  ->  (Chrome) http://3.34.179.151:8501
+2) (AWS) Amazon EC2  ->  security  ->  security group  ->  inbound rule  ->  add rule  ->  user TCP  ->  port: 8501 ->  source: Anywhere  ->  save  ->  inbound rule  ->  add rule  ->  HTTP & HTTPS (load balancer)  ->  source: Anywhere  ->  save
+3) (Chrome) http://3.34.179.151:8501
+=>  (HTTPS problem) Sound is not delivered to BackEnd.
 
 
+15. Domain registration
+(AWS)  ->  (search) route 53  ->  creating domain:  domain name
+
+
+16. ACM: AWS certificate
+(AWS)  ->  (search) amazon certificate manager  ->  Certificate Manager  ->  Request Certificate  ->  Public Certificate  ->  domain name  ->  Request
+
+
+17. Load Balancer
+(AWS)  ->  EC2  ->  Load Balancer  ->  Create Load Balancer  ->  Application Load Balancer  ->  LB name  ->  Network Mapping:  Select All  ->  Security Group:  EC2 check (Instance  ->  Security  ->  launch-wizard-2)  ->  Listener & Routing:  (HTTP: 80) Creating Group  ->  Instance  ->  Group name  ->  Port:  8501  ->  Next  ->  Creating Group  ->  Load Balancer:  refresh Group  ->  select Group  ->  add Listener  ->  Protocol: HTTPS  ->  select Group  ->  SSL/TLS server certificate  ->  ACM  ->  select Certificate  ->  create Load Balancer
+
+
+18. Connect domain to Load Balancer
+(AWS)  ->  (search) route 53  ->  Hosting area  ->  select domain  ->  create record  ->  nickname  ->  Endpoint:  Application/Classic Load Balancer  ->  Region:  Seoul  ->  Load Balancer:  select mine  ->  create record
+
+
+19. Test speaking_exam.py
+(Chrome) https://pedro-repository.com/
+
+
+20. nohup
+(open) nohup streamlit run speaking_exam.py &
+(close) ps -ef | grep streamlit  ->  kill -9 2740 (PID number)
+(print screen) cat nohup.out
