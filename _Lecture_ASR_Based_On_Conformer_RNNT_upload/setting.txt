@@ -1,0 +1,58 @@
+1. copy repository 
+git clone https://github.com/wonkyuml/fc-asr.git
+
+2. check my GPU
+nvidia-smi
+
+3. environment setup
+- Ubuntu or Linux
+- Python3.8 or newer
+- GPU (CUDA 11.8)
+- Pytorch 2.1.0 or newer
+
+4. open virtual environment
+- conda create -n asr 
+- conda activate myenv
+
+5. check library
+- pip freeze
+- pip install -r requirements.txt
+
+6. download datafile
+- vi download_librispeech.py (http://www.openslr.org/12/)
+- python download_librispeech.py
+- cd corpus/LibriSpeech
+
+7. ASR using conformer RNN transducer
+- (jupyter lab) 1_notebook_melspectrogram.ipynb :  extract melspectrogram using signal processing (https://docs.pytorch.org/audio/main/transforms.html)
+- (pytorch) conformer RNN transducer modeling (https://docs.pytorch.org/audio/2.2.0/_modules/torchaudio/prototype/models/rnnt.html, https://docs.pytorch.org/audio/2.2.0/_modules/torchaudio/models/conformer.html)
+   * (training tokenizer) vi train_spm.py  ->  python train_spm.py --librispeech-path ./corpus  (create spm_unigram_1023.model)
+   * vi global_stats.json :  normalization of mel feature
+   * (training conformer RNNT model) python train.py --exp-dir ./exp --librispeech-path ./corpus --global-stats-path ./global_stats.json --sp-model-path ./spm_unigram_1023.model  --nodes 1 --gpus 1 --epochs 50
+   * (terminal : check training results) tensorboard --logdir ./exp --host 0.0.0.0 --port 3000 (exp/lightning_logs or checkpoints)  ->  (web browser) http://localhost:3000
+   * (evaluation:  compute WER) vi eval.py  ->  python eval.py --checkpoint-path ./exp/checkpoints/epoch\=2-step\=42813.ckpt --global-stats-path ./global_stats.json --sp-model-path ./spm_unigram_1023.model --librispeech-path ./corpus --use-cud
+- (jupyter lab) 2_notebook_conformer_eval.ipynb :  conformer evaluation/test
+
+8. classification tasks using conformer RNN transducer
+- gender detection
+   * download datafile :  https://github.com/speechbrain/speechbrain/tree/develop/recipes/CommonLanguage (CommonLanguage.tar.gz)
+   * extract file :  tar -xf CommonLanguage.tar.gz (/common_voice_kpd/)
+   * create (gender detection) csv file from datafile :  python prepare_gender_data.py --datafolder ./common_voice_kpd/ --savefolder ./gender
+   * (jupyter lab) 3. notebook_gender_detection.ipynb
+- language identification using conformer RNN transducer
+   * create (language detection) csv file from datafile :  python prepare_lid_data.py --datafolder ./common_voice_kpd/ --savefolder ./lid
+   * (jupyter lab) 4. notebook_language_detection.ipynb
+
+9. dialog acts using conformer RNN transducer
+- download datafile :  https://github.com/cricketclub/gridspace-stanford-harper-valley (gridspace-stanford-harper-valley-master.zip)
+- extract file :  unzip gridspace-stanford-harper-valley-master.zip (/gridspace-stanford-harper-valley-master/)
+- (jupyter lab) 5. notebook_dialog_acts_bert.ipynb
+
+10. voice assistant (ASR + LLM + TTS)
+- requirements
+   * Webservice (FastAPI)
+   * ASR (Conformer RNN-T inference)
+   * LLM (ChatGPT API)
+   * TTS (Web Speech API)
+- check requirements :  cat requirements.txt
+- open webservice server :  python webapp.py  ->  (web browser) https://localhost:8080
